@@ -37,9 +37,9 @@
 
 
 #ifdef CONFIG_PLATFORM_UBUNTU
-#define CONFIG_BLUEDROID        1 /* bleuz 0, bluedroid 1 */
+#define CONFIG_BLUEDROID        0 /* bleuz 0, bluedroid 1 */
 #else
-#define CONFIG_BLUEDROID        1 /* bleuz 0, bluedroid 1 */
+#define CONFIG_BLUEDROID        0 /* bleuz 0, bluedroid 1 */
 #endif
 
 
@@ -886,4 +886,3 @@ int download_patch(firmware_info *fw_info, int cached);
 #else
 #define NUM_REASSEMBLY 4
 #endif
-
