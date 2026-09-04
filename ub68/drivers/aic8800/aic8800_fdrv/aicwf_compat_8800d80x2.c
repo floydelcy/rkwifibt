@@ -43,9 +43,22 @@ int	rwnx_plat_userconfig_load_8800d80x2(struct rwnx_hw *rwnx_hw){
 #ifndef ANDROID_PLATFORM
     {
         char temp_path[200];
-        snprintf(temp_path, sizeof(temp_path), "%s/%s", aic_fw_path, "aic8800D80X2");
-        strncpy(aic_fw_path, temp_path, 199);
-        aic_fw_path[199] = '\0';
+        int path_len = (int)strlen(aic_fw_path);
+        int chip_dir_len = (int)(sizeof("aic8800D80X2") - 1);
+
+        /* aic_fw_path may already point into the aic8800D80X2 dir,
+         * e.g. inherited from aic_load_fw via get_fw_path() when the
+         * loader was loaded with aic_fw_path=/lib/firmware/aic8800D80X2.
+         * Only append the chip subdir when it is not there yet,
+         * otherwise the userconfig file open would fail. */
+        while (path_len > 0 && aic_fw_path[path_len - 1] == '/')
+            path_len--;
+        if (path_len < chip_dir_len ||
+            strncmp(aic_fw_path + path_len - chip_dir_len, "aic8800D80X2", chip_dir_len)) {
+            snprintf(temp_path, sizeof(temp_path), "%s/%s", aic_fw_path, "aic8800D80X2");
+            strncpy(aic_fw_path, temp_path, 199);
+            aic_fw_path[199] = '\0';
+        }
     }
 #endif
 
@@ -100,4 +113,3 @@ int rwnx_plat_powerlimit_load_8800d80x2(struct rwnx_hw *rwnx_hw)
     return 0;
 }
 #endif
-
